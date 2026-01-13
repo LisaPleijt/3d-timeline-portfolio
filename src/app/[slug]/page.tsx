@@ -1,11 +1,19 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getProjectBySlug, projects } from '@/data/projects';
-import { ArrowLeftIcon } from '@heroicons/react/24/outline'; // Need to make sure heroicons is installed or use SVG
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getProjectBySlug as getMdxProject, getAllProjects } from '@/lib/mdx';
+import { getProjectBySlug as getStaticProject, projects as staticProjects } from '@/data/projects';
 
+// Combine static params for static generation
 export async function generateStaticParams() {
-    return projects.map((project) => ({
-        slug: project.slug,
+    const mdxProjects = getAllProjects();
+    const allSlugs = new Set([
+        ...mdxProjects.map(p => p.slug),
+        ...staticProjects.map(p => p.slug)
+    ]);
+
+    return Array.from(allSlugs).map((slug) => ({
+        slug,
     }));
 }
 
@@ -15,7 +23,15 @@ export default async function ProjectPage({
     params: Promise<{ slug: string }>;
 }) {
     const { slug } = await params;
-    const project = getProjectBySlug(slug);
+
+    // Try finding in MDX first, then static
+    let project: import('@/types').Project | null | undefined = getMdxProject(slug);
+    let isMdx = true;
+
+    if (!project) {
+        project = getStaticProject(slug);
+        isMdx = false;
+    }
 
     if (!project) {
         notFound();
@@ -47,10 +63,13 @@ export default async function ProjectPage({
                     </p>
                 </header>
 
-                <section
-                    className="prose prose-lg prose-gray max-w-none font-light"
-                    dangerouslySetInnerHTML={{ __html: project.content }}
-                />
+                <section className="prose prose-lg prose-gray max-w-none font-light">
+                    {isMdx ? (
+                        <MDXRemote source={project.content} />
+                    ) : (
+                        <div dangerouslySetInnerHTML={{ __html: project.content }} />
+                    )}
+                </section>
             </article>
 
             <div className="h-32" /> {/* Spacer */}

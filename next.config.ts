@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: '/portfolio',
-  assetPrefix: '/portfolio',
-  output: 'export', // Static export for easier hosting
+  // output: 'export', // Removed for dynamic MDX features
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true, // Keep for now if simple hosting checks are needed, but can likely be removed later
   },
 };
 

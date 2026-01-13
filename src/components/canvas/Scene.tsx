@@ -12,6 +12,8 @@ import { Lights } from './Lights';
 import { useStore } from '@/lib/store';
 import * as THREE from 'three';
 
+import { Project } from '@/types';
+
 function CameraHandler() {
     const { camera, controls } = useThree();
     const setCameraState = useStore((state) => state.setCameraState);
@@ -61,7 +63,11 @@ function CameraHandler() {
     );
 }
 
-export default function Scene() {
+interface SceneProps {
+    projects: Project[];
+}
+
+export default function Scene({ projects }: SceneProps) {
     return (
         <div className="fixed inset-0 z-0">
             <Canvas
@@ -72,7 +78,7 @@ export default function Scene() {
             >
                 <Suspense fallback={null}>
                     <Lights />
-                    <Timeline />
+                    <Timeline projects={projects} />
                     <CameraHandler />
                 </Suspense>
             </Canvas>

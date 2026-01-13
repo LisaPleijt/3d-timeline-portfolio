@@ -1,8 +1,12 @@
 import { useMemo } from 'react';
 import { Card } from './Card';
-import { projects } from '@/data/projects';
+import { Project } from '@/types';
 
-export function Timeline() {
+interface TimelineProps {
+    projects: Project[];
+}
+
+export function Timeline({ projects }: TimelineProps) {
     const cards = useMemo(() => {
         // "Today" is Z=0. 21 days ago is Z=-70.
         // Date diff mapping
@@ -29,7 +33,7 @@ export function Timeline() {
                 position: [x, y, z] as [number, number, number]
             };
         });
-    }, []);
+    }, [projects]);
 
     return (
         <group>

@@ -1,0 +1,37 @@
+---
+id: '1'
+title: 'Foam Memory Index'
+date: '2026-01-13'
+type: 'essay'
+excerpt: 'Exploring the retention of structure in transient mediums.'
+image: '/images/foam-memory.jpg'
+---
+
+# Foam Memory Index
+
+Exploring the retention of structure in transient mediums.
+
+## The Nature of Foam
+
+Foam is fundamentally unstable. Its structure exists in a state of perpetual collapse, each bubble a temporary vault holding air against gravity and surface tension. Yet within this transience lies a peculiar form of memory.
+
+## Digital Parallels
+
+When we create digital structures that mimic foam—translucent, cellular, breathing—we're not just rendering aesthetics. We're encoding a philosophy about how information should exist: **visible but not insistent, structured but not rigid, present but not permanent**.
+
+## Implementation Notes
+
+Using Marching Cubes and Gyroid SDFs, I've been exploring how to capture this ephemeral quality in Three.js. The challenge is making something that feels *alive* without overwhelming the viewer.
+
+```glsl
+// Gyroid SDF for foam-like structures
+float gyroid(vec3 p) {
+    return dot(sin(p), cos(p.yzx));
+}
+```
+
+The key is in the subtlety—enough movement to suggest life, not enough to distract from thought.
+
+---
+
+*Created: January 13, 2026*

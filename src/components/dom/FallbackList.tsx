@@ -1,7 +1,11 @@
 import Link from 'next/link';
-import { projects } from '@/data/projects';
+import { Project } from '@/types';
 
-export function FallbackList() {
+interface FallbackListProps {
+    projects: Project[];
+}
+
+export function FallbackList({ projects }: FallbackListProps) {
     return (
         <div className="w-full max-w-4xl mx-auto px-4 py-24">
             <h2 className="text-xl font-light mb-8 text-gray-400 uppercase tracking-widest">Index</h2>

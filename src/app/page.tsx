@@ -1,18 +1,20 @@
-'use client';
-
-import dynamic from 'next/dynamic';
+import { SceneLoader } from '@/components/canvas/SceneLoader';
 import { FallbackList } from '@/components/dom/FallbackList';
-
-const Scene = dynamic(() => import('@/components/canvas/Scene'), {
-  ssr: false,
-  loading: () => <div className="fixed inset-0 flex items-center justify-center text-gray-500">Loading Space...</div>
-});
+import { getAllProjects } from '@/lib/mdx';
+import { projects as staticProjects } from '@/data/projects';
 
 export default function Home() {
+  // Fetch MDX projects
+  const mdxProjects = getAllProjects();
+
+  // Combine with static projects (filtering out duplicates by slug if any)
+  const allProjects = [...mdxProjects, ...staticProjects.filter(sp => !mdxProjects.some(mp => mp.slug === sp.slug))]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
   return (
     <main className="relative w-full h-screen overflow-hidden">
       {/* 3D Scene Layer */}
-      <Scene />
+      <SceneLoader projects={allProjects} />
 
       {/* UI Overlay */}
       <div className="absolute top-8 left-8 z-10 pointer-events-none">
@@ -22,7 +24,7 @@ export default function Home() {
 
       {/* Fallback / SEO Content (Hidden visually when 3D is active, customizable) */}
       <div className="absolute inset-0 z-[-1] opacity-0 pointer-events-none" aria-hidden="true">
-        <FallbackList />
+        <FallbackList projects={allProjects} />
       </div>
     </main>
   );
